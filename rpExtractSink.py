@@ -227,7 +227,7 @@ class rpCache:
 ## Class to read all the input files
 #
 # Contains all the functions that read the cache files and input files to reconstruct the heterologous pathways
-class rpGenSink:
+class rpExtractSink:
     ## InputReader constructor
     #
     #  @param self The object pointer
@@ -334,4 +334,4 @@ class rpGenSink:
 
 
 if __name__== "__main__":
-    rpGenSink()
+    rpExtractSink()
