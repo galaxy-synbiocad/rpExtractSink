@@ -286,7 +286,6 @@ class rpExtractSink:
         return True
 
 
-
     #TODO: move this to another place
 
     ## Generate the sink from a given model and the
