@@ -1,6 +1,6 @@
-FROM brsynth/rpbase
+FROM brsynth/rpbase:dev
 
-RUN apt-get install --quiet --yes \ 
+RUN apt-get install --quiet --yes \
 	libxext6  \
     	libxrender-dev  && \
     conda install -y -c rdkit rdkit && \
@@ -17,4 +17,3 @@ RUN wget https://retrorules.org/dl/this/is/not/a/secret/path/rr02 -O /home/rr02_
     rm /home/rr02_more_data.tar.gz
 
 RUN python rpExtractSink.py
-
