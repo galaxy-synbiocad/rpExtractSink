@@ -1,6 +1,6 @@
 FROM brsynth/rpbase
 
-RUN apt-get install --quiet --yes \ 
+RUN apt-get install --quiet --yes \
 	libxext6  \
     	libxrender-dev  && \
     conda install -y -c rdkit rdkit && \
@@ -9,12 +9,4 @@ RUN apt-get install --quiet --yes \
 
 COPY rpExtractSink.py /home/
 
-#get rr_compounds.tsv
-RUN wget https://retrorules.org/dl/this/is/not/a/secret/path/rr02 -O /home/rr02_more_data.tar.gz && \
-    tar xf /home/rr02_more_data.tar.gz -C /home/ && \
-    mv /home/rr02_more_data/compounds.tsv /home/input_cache/rr_compounds.tsv && \
-    rm -r /home/rr02_more_data && \
-    rm /home/rr02_more_data.tar.gz
-
 RUN python rpExtractSink.py
-
