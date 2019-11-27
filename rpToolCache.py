@@ -13,19 +13,6 @@ from rpCache import rpCache
 # Collection of functions that convert the outputs from various sources to the SBML format (rpSBML) for further analyses
 
 
-## Error function for the convertion of structures
-#
-class Error(Exception):
-    pass
-
-
-## Error function for the convertion of structures
-#
-class DepictionError(Error):
-    def __init__(self, message):
-        #self.expression = expression
-        self.message = message
-
 
 #######################################################
 ################### rpCache  ##########################
