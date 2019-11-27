@@ -40,6 +40,7 @@ class rpGenSink:
     def genSink(self, input_sbml, compartment_id='MNXC3'):
         print(input_sbml)
         print(type(input_sbml))
+        return ''
         rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(input_sbml))
         #rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_string))
         #rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_bytes.decode('utf-8')))
