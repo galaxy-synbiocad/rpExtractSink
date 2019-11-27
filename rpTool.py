@@ -20,10 +20,8 @@ class rpGenSink:
     #  @param self The object pointer
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.logger.info('Starting instance of rpReader')
+        self.logger.info('Starting instance of rpGenSink')
         self.mnxm_strc = None #There are the structures from MNXM
-        if not self._loadCache():
-            raise ValueError
 
 
     #######################################################################
