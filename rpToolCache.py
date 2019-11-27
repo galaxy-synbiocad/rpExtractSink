@@ -46,7 +46,7 @@ class rpToolCache(rpCache):
     # @param The oject pointer
     # @return Boolean detemining the success of the function or not
     def _loadCache(self, fetchInputFiles=False):
-        return True
+        return super()._loadCache(fetchInputFiles)
 
 
 

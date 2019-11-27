@@ -57,7 +57,7 @@ class RestQuery(Resource):
         params = json.load(request.files['data'])
         #pass the cache parameters to the rpReader
         rpgensink = rpGenSink.rpGenSink()
-        rpreader.mnxm_strc = rpcache.mnxm_strc
+        rpgensink.mnxm_strc = rpcache.mnxm_strc
 
         #pass the files to the rpReader
         #tf = tarfile.open(fileobj=outputTar, mode='w:xz')
