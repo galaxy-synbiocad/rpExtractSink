@@ -25,7 +25,7 @@ api = Api(app)
 
 #TODO: test that it works well
 #declare the rpReader globally to avoid reading the pickle at every instance
-rpgensink = rpGenSink.rpGenSink()
+rpcache = rpToolCache.rpToolCache()
 
 
 def stamp(data, status=1):
@@ -55,6 +55,10 @@ class RestQuery(Resource):
     def post(self):
         inSBML = request.files['inSBML']
         params = json.load(request.files['data'])
+        #pass the cache parameters to the rpReader
+        rpgensink = rpGenSink.rpGenSink()
+        rpreader.mnxm_strc = rpcache.mnxm_strc
+
         #pass the files to the rpReader
         #tf = tarfile.open(fileobj=outputTar, mode='w:xz')
         #sink_string = rpgensink.genSink(inSBML, params['compartment_id'])

@@ -38,7 +38,7 @@ class rpGenSink:
     # TODO: change this to read the annotations and extract the MNX id's
     #
     def genSink(self, input_sbml, compartment_id='MNXC3'):
-        rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(input_sbml))
+        rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(input_sbml.read().decode("utf-8")))
         #rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_string))
         #rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_bytes.decode('utf-8')))
         file_out = io.StringIO()
