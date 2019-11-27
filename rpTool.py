@@ -38,21 +38,29 @@ class rpGenSink:
     # TODO: change this to read the annotations and extract the MNX id's
     #
     def genSink(self, input_sbml, compartment_id='MNXC3'):
+        printf("toc 2")
         rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(input_sbml))
         #rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_string))
         #rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_bytes.decode('utf-8')))
+        printf("toc 2")
         file_out = io.StringIO()
         #file_out = io.BytesIO()
         ### open the cache ###
+        printf("toc 2")
         cytoplasm_species = []
+        printf("toc 2")
         for i in rpsbml.model.getListOfSpecies():
             if i.getCompartment()==compartment_id:
                 cytoplasm_species.append(i)
+        printf("toc 2")
         count = 0
         #with open(file_out, mode='wb') as f:
         #writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        printf("toc 2")
         writer = csv.writer(file_out, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        printf("toc 2")
         writer.writerow(['Name','InChI'])
+        printf("toc 2")
         for i in cytoplasm_species:
             res = rpsbml.readMIRIAMAnnotation(i.getAnnotation())
             #extract the MNX id's
@@ -68,8 +76,10 @@ class rpGenSink:
             if mnx and inchi:
                 writer.writerow([mnx,inchi])
                 count += 1
+        printf("toc 2")
         file_out.seek(0)
         #out = file_out.read()
+        printf("toc 2")
         if count==0:
             return ''
         else:
