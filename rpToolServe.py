@@ -11,7 +11,8 @@ import io
 
 
 sys.path.insert(0, '/home/')
-import rpGenSink
+import rpTool as rpGenSink
+import rpToolCache
 
 ##############################################
 ################### REST #####################
@@ -28,10 +29,10 @@ rpgensink = rpGenSink.rpGenSink()
 
 
 def stamp(data, status=1):
-    appinfo = {'app': 'rpGenSink', 'version': '1.0', 
+    appinfo = {'app': 'rpGenSink', 'version': '1.0',
                'author': 'Melchior du Lac',
                'organization': 'BRS',
-               'time': datetime.now().isoformat(), 
+               'time': datetime.now().isoformat(),
                'status': status}
     out = appinfo.copy()
     out['data'] = data
@@ -51,7 +52,7 @@ class RestQuery(Resource):
         Avoid returning numpy or pandas object in
         order to keep the client lighter.
     """
-    def post(self):       
+    def post(self):
         inSBML = request.files['inSBML'].read()
         params = json.load(request.files['data'])
         #pass the files to the rpReader
@@ -71,4 +72,4 @@ api.add_resource(RestQuery, '/REST/Query')
 
 if __name__== "__main__":
     #debug = os.getenv('USER') == 'mdulac'
-    app.run(host="0.0.0.0", port=8993, debug=True, threaded=True)
+    app.run(host="0.0.0.0", port=8888, debug=True, threaded=True)
