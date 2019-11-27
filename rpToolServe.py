@@ -53,7 +53,7 @@ class RestQuery(Resource):
         order to keep the client lighter.
     """
     def post(self):
-        inSBML = request.files['inSBML'].read()
+        inSBML = request.files['inSBML']
         params = json.load(request.files['data'])
         #pass the files to the rpReader
         #tf = tarfile.open(fileobj=outputTar, mode='w:xz')
