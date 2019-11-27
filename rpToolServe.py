@@ -53,11 +53,8 @@ class RestQuery(Resource):
         order to keep the client lighter.
     """
     def post(self):
-        print("toc 1")
         inSBML = request.files['inSBML'].read()
-        print("toc 1")
         params = json.load(request.files['data'])
-        print("toc 1")
         #pass the files to the rpReader
         #tf = tarfile.open(fileobj=outputTar, mode='w:xz')
         #sink_string = rpgensink.genSink(inSBML, params['compartment_id'])
