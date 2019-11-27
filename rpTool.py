@@ -14,7 +14,7 @@ import rpSBML
 ## Class to read all the input files
 #
 # Contains all the functions that read the cache files and input files to reconstruct the heterologous pathways
-class rpExtractSink:
+class rpGenSink:
     ## InputReader constructor
     #
     #  @param self The object pointer
