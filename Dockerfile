@@ -1,1 +1,0 @@
-FROM brsynth/rpcache-rest
