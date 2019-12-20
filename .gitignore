@@ -1,3 +1,5 @@
 __pycache__/
 cache/
 input_cache/
+*.swp
+test_output.csv

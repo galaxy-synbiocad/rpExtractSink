@@ -14,13 +14,13 @@ import rpSBML
 ## Class to read all the input files
 #
 # Contains all the functions that read the cache files and input files to reconstruct the heterologous pathways
-class rpGenSink:
+class rpExtractSink:
     ## InputReader constructor
     #
     #  @param self The object pointer
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.logger.info('Starting instance of rpGenSink')
+        self.logger.info('Starting instance of rpExtractSink')
         self.mnxm_strc = None #There are the structures from MNXM
 
 
