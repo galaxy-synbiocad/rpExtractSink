@@ -4,8 +4,8 @@ import rpTool as rpGenSink
 import rpToolCache
 
 
-def main():
+def main(inSBML, compartment_id):
     rpcache = rpToolCache.rpToolCache()
     rpgensink = rpGenSink.rpGenSink()
     rpgensink.mnxm_strc = rpcache.mnxm_strc
-    return rpgensink.genSink(inSBML, params['compartment_id']).read().encode())
+    return rpgensink.genSink(inSBML, compartment_id.read().encode())
