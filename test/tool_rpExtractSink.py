@@ -5,7 +5,7 @@ import argparse
 import sys
 
 sys.path.insert(0, '/home/')
-import rpExtractSink
+import rpToolServe
 
 ##
 #
@@ -13,10 +13,8 @@ import rpExtractSink
 def extract(inSBML,
         outputSink,
         compartment_id):
-    # Post request
-    rpextractsink = rpExtractSink.rpExtractSink()
     with open(outputSink, 'wb') as ot:
-        ot.write(rpextractsink.genSink(inSBML, compartment_id).read().encode())
+        ot.write(rpToolServe.main(inSBML, compartment_id).read().encode())
 
 
 if __name__ == "__main__":

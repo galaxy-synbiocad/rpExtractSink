@@ -1,8 +1,8 @@
 import sys
 sys.path.insert(0, '/home/')
+
 import rpTool as rpGenSink
 import rpToolCache
-
 
 def main(inSBML, compartment_id):
     rpcache = rpToolCache.rpToolCache()
