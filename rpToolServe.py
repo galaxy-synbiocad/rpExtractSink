@@ -13,7 +13,6 @@ import io
 sys.path.insert(0, '/home/')
 import rpTool as rpExtractSink
 import rpToolCache
-#import rpCache
 
 
 ##############################################
@@ -25,7 +24,6 @@ app = Flask(__name__)
 api = Api(app)
 
 rpcache = rpToolCache.rpToolCache()
-#rpcache = rpCache.rpCache()
 
 
 def stamp(data, status=1):
