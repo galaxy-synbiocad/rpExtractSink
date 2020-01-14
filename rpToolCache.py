@@ -13,7 +13,6 @@ from rpCache import rpCache
 # Collection of functions that convert the outputs from various sources to the SBML format (rpSBML) for further analyses
 
 
-
 #######################################################
 ################### rpCache  ##########################
 #######################################################
@@ -69,7 +68,7 @@ class rpToolCache(rpCache):
         else:
             raise NotImplementedError('"{}" is not a valid input type'.format(itype))
         if rdmol is None:  # Check imprt
-            raise DepictionError('Import error from depiction "{}" of type "{}"'.format(idepic, itype))
+            raise self.DepictionError('Import error from depiction "{}" of type "{}"'.format(idepic, itype))
         # Export
         odepic = dict()
         for item in otype:
