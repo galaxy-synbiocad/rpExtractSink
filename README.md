@@ -32,7 +32,8 @@ sudo service docker restart
 Build the docker image:
 
 ```
-docker build -t brsynth/rpextractsink .
+docker build -t brsynth/rpextractsink-rest .
+docker run -p 8882:8888 brsynth/rpextractsink-rest
 ```
 
 Make sure that the following entry exists under Galaxy's destination tag in job_conf.xml:
