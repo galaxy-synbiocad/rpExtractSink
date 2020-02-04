@@ -1,1 +1,1 @@
-FROM brsynth/rpcache-rest
+FROM brsynth/rpcache-rest:dev
