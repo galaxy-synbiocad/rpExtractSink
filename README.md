@@ -1,6 +1,6 @@
-# Galaxy rpCofactors
+# Galaxy rpExtractSink
 
-Galaxy tool that reads the output of RP2paths (link to the project), parses it, and adds the missing cofactors from mono-component reactions compared with the original reactions from wich the reaction rule is generated from. The output of the tool is a tar.xz file with each generated pathways (and sub-pathways) generated into an individual SBML files. 
+REST service version. Tool that takes for input an SBML file, uses the MIRIAM annotations to extract the cross-references and finds the InChI structure. The output a CSV file that is RetroPath2.0 friendly input as a sink. 
 
 ## Getting Started
 
@@ -17,7 +17,7 @@ Create a new section in the Galaxy tool_conf.xml from the config file:
 
 ```
 <section id="retro" name="Retro Nodes">
-  <tool file="/local/path/wrap_rpCofactors.xml" />
+  <tool file="/local/path/wrap_rpExtractSink.xml" />
 </section>
 ```
 
@@ -50,7 +50,7 @@ Make sure that the following entry exists under Galaxy's destination tag in job_
 And that the destination of the tool is refered under the tools tag of job_conf.xml:
 
 ```
-    <tool id="rpCofactors" destination="docker_local" />
+    <tool id="rpExtractSink" destination="local" />
 ```
 
 Finally, make sure that you give the python scripts execution permission:
@@ -59,21 +59,17 @@ Finally, make sure that you give the python scripts execution permission:
 chmod 755 *.py
 ```
 
-## Running the tests
+## Running
 
 TODO
 
-### And coding style tests
+### Example Input
 
-Explain what these tests test and why
-
-```
-Give an example
-```
+TODO
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+TODO
 
 ## Built With
 
@@ -81,11 +77,11 @@ Add additional notes about how to deploy this on a live system
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+TODO
 
 ## Versioning
 
-TODO
+Version 0.1
 
 ## Authors
 
@@ -93,7 +89,7 @@ TODO
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+[MIT](https://github.com/Galaxy-SynBioCAD/rpExtractSink/blob/master/LICENSE)
 
 ## Acknowledgments
 
