@@ -7,11 +7,11 @@ Tool that takes for input an SBML file, uses the MIRIAM annotations to extract t
 ### Input
 
 Required information:
-    * Either tar.xz input collection of rpSBML files or a single rpSBML file.
+* Either tar.xz input collection of rpSBML files or a single rpSBML file.
 
 Advanced options:
-    * Name of the heterologous pathway: (default: rp_pathway) Groups ID of the heterologous pathway
-    * IP address of the rpExtractSink REST service: IP address of the REST service
+* Name of the heterologous pathway: (default: rp_pathway) Groups ID of the heterologous pathway
+* IP address of the rpExtractSink REST service: IP address of the REST service
 
 ### Output
 
