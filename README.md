@@ -1,4 +1,4 @@
-# rpExtractSink
+# rpMakeSource
 
 Tool that takes for input an SBML file, uses the MIRIAM annotations to extract the cross-references and finds the InChI structure. The output a CSV file that is RetroPath2.0 friendly input as a sink. 
 
@@ -7,15 +7,15 @@ Tool that takes for input an SBML file, uses the MIRIAM annotations to extract t
 ### Input
 
 Required information:
-* Either tar.xz input collection of rpSBML files or a single rpSBML file.
+* **rpSBML input**: Either tar.xz input collection of rpSBML files or a single rpSBML file.
 
 Advanced options:
-* Name of the heterologous pathway: (default: rp_pathway) Groups ID of the heterologous pathway
-* IP address of the rpExtractSink REST service: IP address of the REST service
+* **Name of the heterologous pathway**: (default: rp_pathway) Groups ID of the heterologous pathway
+* **IP address of the rpExtractSink REST service**: IP address of the REST service
 
 ### Output
 
-* Sink: The output is a CSV RetroPath2.0 friendly format 
+* **Sink**: The output is a CSV RetroPath2.0 friendly format 
 
 ## Installing
 
