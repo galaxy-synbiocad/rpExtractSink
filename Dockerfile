@@ -1,6 +1,6 @@
-FROM brsynth/rpcache
+FROM brsynth/rpcache:dev
 
 COPY rpTool.py /home/
 COPY rpToolServe.py /home/
-
-RUN rm -f /home/Dockerfile
+COPY rpToolCache.py /home/
+COPY galaxy_tool/tool_rpExtractSink.py /home/
