@@ -22,7 +22,7 @@ Advanced options:
 To compile the docker use the following command:
 
 ```
-docker build -t brsynth/rpextractsink-rest .
+docker build -t brsynth/rpextractsink-rest:dev .
 ```
 
 To run the service as localhost, use the following command:
