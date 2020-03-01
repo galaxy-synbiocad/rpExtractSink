@@ -38,9 +38,9 @@ class rpExtractSink:
     #
     def _convertToCobra(self):
         try:
-            #self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString(),
-            #        use_fbc_package=True)
-            self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString())
+            self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString(),
+                    use_fbc_package=True)
+            #self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString())
             #use CPLEX
             # self.cobraModel.solver = 'cplex'
         except cobra.io.sbml.CobraSBMLError as e:
@@ -62,8 +62,8 @@ class rpExtractSink:
         lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(self.cobraModel, open_exchanges=True)
         #logging.info('Reducing model > {} reactions to be removed'.format(len(lof_zero_flux_rxn)))
         # For assert and logging: Backup the list of metabolites and reactions
-        nb_metabolite_model_ids = set([m.id for m in model.metabolites])
-        nb_reaction_model_ids = set([m.id for m in model.reactions])
+        nb_metabolite_model_ids = set([m.id for m in self.cobraModel.metabolites])
+        nb_reaction_model_ids = set([m.id for m in self.cobraModel.reactions])
         #logging.info('Reducing model > {} metabolites before reduction'.format(len(nb_metabolite_model_ids)))
         #logging.info('Reducing model > {} reactions before reduction'.format(len(nb_reaction_model_ids)))
         # Remove unwanted reactions and metabolites
@@ -75,13 +75,20 @@ class rpExtractSink:
         #logging.info('Reducing model > {} reactions after reduction'.format(len(set([m.id for m in model.reactions]))))
         #return model 
 
+
+    ##
+    #
+    #
     def _removeDeadEnd(self):
         self._convertToCobra()
         #self.cobraModel = self._reduce_model(self.cobraModel)
         self._reduce_model()
         with tempfile.TemporaryDirectory() as tmpOutputFolder:
-            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml.sbml', use_fbc_package=True)
-            self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(tmpOutputFolder+'/tmp.xml.sbml'))
+            #cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml.sbml', use_fbc_package=True)
+            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml')
+            self.rpsbml = rpSBML.rpSBML('inputModel')
+            self.rpsbml.readSBML(tmpOutputFolder+'/tmp.xml')
+            #self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(tmpOutputFolder+'/tmp.xml'))
 
     #######################################################################
     ############################# PUBLIC FUNCTIONS ########################
@@ -126,6 +133,3 @@ class rpExtractSink:
             return ''
         else:
             return file_out
-
-    
-
