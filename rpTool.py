@@ -74,6 +74,12 @@ class rpExtractSink:
         logging.info('Reducing model > {} reactions after reduction'.format(len(set([m.id for m in model.reactions]))))
         return model 
 
+    def _removeDeadEnd(self):
+        self._convertToCobra()
+        self._reduce_model(self.cobraModel)
+        with tempfile.TemporaryDirectory() as tmpOutputFolder:
+            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml.sbml', use_fbc_package=True)
+            self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(tmpOutputFolder+'/tmp.xml.sbml'))
 
     #######################################################################
     ############################# PUBLIC FUNCTIONS ########################
@@ -89,7 +95,7 @@ class rpExtractSink:
         sbml_data = input_sbml.read().decode("utf-8")
         self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_data))
         if remove_dead_end:
-            self.removeDeadEnd()
+            self._removeDeadEnd()
         file_out = io.StringIO()
         ### open the cache ###
         cytoplasm_species = []
@@ -120,10 +126,4 @@ class rpExtractSink:
             return file_out
 
     
-    def removeDeadEnd(self):
-        self._convertToCobra()
-        self._reduce_model(self.cobraModel)
-        with tempfile.TemporaryDirectory() as tmpOutputFolder:
-            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml.sbml', use_fbc_package=True)
-            self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(tmpOutputFolder+'/tmp.xml.sbml'))
 

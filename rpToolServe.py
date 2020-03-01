@@ -1,11 +1,8 @@
 import os
-import uuid
-import shutil
 import json
 from datetime import datetime
 from flask import Flask, request, jsonify, send_file, abort
 from flask_restful import Resource, Api
-#from rpviz.main import run
 import sys
 import io
 
@@ -51,11 +48,11 @@ class RestQuery(Resource):
         order to keep the client lighter.
     """
     def post(self):
-        inSBML = request.files['inSBML']
+        input_sbml = request.files['input_sbml']
         params = json.load(request.files['data'])
         rpextractsink = rpExtractSink.rpExtractSink()
         rpextractsink.mnxm_strc = rpcache.mnxm_strc
-        return send_file(io.BytesIO(rpextractsink.genSink(inSBML, params['compartment_id']).read().encode()), as_attachment=True, attachment_filename='sink.csv', mimetype='text/csv')
+        return send_file(io.BytesIO(rpextractsink.genSink(input_sbml, bool(params['remove_dead_end']), str(params['compartment_id'])).read().encode()), as_attachment=True, attachment_filename='sink.csv', mimetype='text/csv')
 
 
 
@@ -64,5 +61,4 @@ api.add_resource(RestQuery, '/REST/Query')
 
 
 if __name__== "__main__":
-    #debug = os.getenv('USER') == 'mdulac'
     app.run(host="0.0.0.0", port=8888, debug=False, threaded=True)
