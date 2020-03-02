@@ -11,7 +11,6 @@ import libsbml
 import cobra
 import tempfile
 
-import glob
 
 import rpSBML
 
