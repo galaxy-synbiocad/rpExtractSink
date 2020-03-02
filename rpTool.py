@@ -40,6 +40,7 @@ class rpExtractSink:
         try:
             self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString(),
                     use_fbc_package=True)
+            #self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString())
             #use CPLEX
             # self.cobraModel.solver = 'cplex'
         except cobra.io.sbml.CobraSBMLError as e:
@@ -51,35 +52,43 @@ class rpExtractSink:
     #
     # @param input Cobra model object
     #
-    def _reduce_model(self, model):
+    def _reduce_model(self):
         """
         Reduce the model by removing reaction that cannot carry any flux and orphan metabolites
 
         :param model: cobra model object
         :return: reduced cobra model object
         """
-        lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(model, open_exchanges=True)
-        logging.info('Reducing model > {} reactions to be removed'.format(len(lof_zero_flux_rxn)))
+        lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(self.cobraModel, open_exchanges=True)
+        #logging.info('Reducing model > {} reactions to be removed'.format(len(lof_zero_flux_rxn)))
         # For assert and logging: Backup the list of metabolites and reactions
-        nb_metabolite_model_ids = set([m.id for m in model.metabolites])
-        nb_reaction_model_ids = set([m.id for m in model.reactions])
-        logging.info('Reducing model > {} metabolites before reduction'.format(len(nb_metabolite_model_ids)))
-        logging.info('Reducing model > {} reactions before reduction'.format(len(nb_reaction_model_ids)))
+        nb_metabolite_model_ids = set([m.id for m in self.cobraModel.metabolites])
+        nb_reaction_model_ids = set([m.id for m in self.cobraModel.reactions])
+        #logging.info('Reducing model > {} metabolites before reduction'.format(len(nb_metabolite_model_ids)))
+        #logging.info('Reducing model > {} reactions before reduction'.format(len(nb_reaction_model_ids)))
         # Remove unwanted reactions and metabolites
-        model.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
+        self.cobraModel.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
         # Assert the number are expected numbers
-        assert len(set([m.id for m in model.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
+        assert len(set([m.id for m in self.cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
         # Logs
-        logging.info('Reducing model > {} metabolites after reduction'.format(len(set([m.id for m in model.metabolites]))))
-        logging.info('Reducing model > {} reactions after reduction'.format(len(set([m.id for m in model.reactions]))))
-        return model 
+        #logging.info('Reducing model > {} metabolites after reduction'.format(len(set([m.id for m in model.metabolites]))))
+        #logging.info('Reducing model > {} reactions after reduction'.format(len(set([m.id for m in model.reactions]))))
+        #return model 
 
+
+    ##
+    #
+    #
     def _removeDeadEnd(self):
         self._convertToCobra()
-        self._reduce_model(self.cobraModel)
+        #self.cobraModel = self._reduce_model(self.cobraModel)
+        self._reduce_model()
         with tempfile.TemporaryDirectory() as tmpOutputFolder:
-            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml.sbml', use_fbc_package=True)
-            self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(tmpOutputFolder+'/tmp.xml.sbml'))
+            #cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml.sbml', use_fbc_package=True)
+            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml')
+            self.rpsbml = rpSBML.rpSBML('inputModel')
+            self.rpsbml.readSBML(tmpOutputFolder+'/tmp.xml')
+            #self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromFile(tmpOutputFolder+'/tmp.xml'))
 
     #######################################################################
     ############################# PUBLIC FUNCTIONS ########################
@@ -124,6 +133,3 @@ class rpExtractSink:
             return ''
         else:
             return file_out
-
-    
-
