@@ -44,7 +44,7 @@ def main(input_sbml, output_sink, compartment_id):
                 auto_remove=True, 
                 detach=False, 
                 volumes={tmpOutputFolder+'/': {'bind': '/home/tmp_output', 'mode': 'rw'}})
-        shutil.copy(tmpOutputFolder+'/output.dat', os.getcwd()+'/'+output_sink)
+        shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
 
 
 ##

@@ -1,4 +1,7 @@
 __pycache__/
 cache/
 input_cache/
-test/test_output.csv
+test/
+OLD/
+rpCache.py
+rpSBML.py
