@@ -4,7 +4,7 @@ import logging
 import argparse
 import sys
 
-#sys.path.insert(0, '/home/')
+sys.path.insert(0, '/home/')
 import rpToolServe
 
 
