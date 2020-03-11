@@ -11,7 +11,7 @@ Required:
 
 Addtional information:
 * **-remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
-* **-compartment_id'**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
+* **-compartment_id**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
 
 ## Output
 
@@ -22,7 +22,7 @@ Addtional information:
 To compile the docker use the following command:
 
 ```
-docker build -t brsynth/rpextractsink-rest:dev .
+docker build -t brsynth/rpextractsink-standalone:dev .
 ```
 
 ### Running the test
@@ -30,7 +30,7 @@ docker build -t brsynth/rpextractsink-rest:dev .
 To run the test, run the following command:
 
 ```
-python run.py
+python run.py -input_sbml test/e_coli_model.sbml -output_sink test/test_rpExtractSink.csv
 ```
 
 ## Dependencies
