@@ -1,82 +1,42 @@
-# Galaxy rpExtractSink
+# rpExtractSink docker
 
-Galaxy tool that reads the output of RP2paths (link to the project), parses it, and adds the missing cofactors from mono-component reactions compared with the original reactions from wich the reaction rule is generated from. The output of the tool is a tar.xz file with each generated pathways (and sub-pathways) generated into an individual SBML files. 
+* Docker image: [brsynth/rpextractsink-standalone](https://hub.docker.com/r/brsynth/rpextractsink-standalone)
 
-## Getting Started
+Tool that takes for input an SBML file and uses the MIRIAM annotations of the chemical species within a given compartment to find their InChI structures. Performs FVA to remove dead end metabolites. The output is a CSV RetroPath2.0 friendly CSV file that can be used as sink input. 
 
-This is a docker galaxy tools, and thus, the docker needs to be built locally where Galaxy is installed. 
+## Input
 
-### Prerequisites
+Required:
+* **-input_sbml**: (string) Path to the input SBML file
 
-* Docker - [Install](https://docs.docker.com/v17.09/engine/installation/)
-* libSBML - [Anaconda library](https://anaconda.org/SBMLTeam/python-libsbml)
+Addtional information:
+* **-remove_dead_end**: (boolean, default: True) Perform FVA evaluation to remove dead end metabolites
+* **-compartment_id'**: (string, default: MNXC3) Specify the compartment from which to extract the sink molecules. The default are for MetaNetX files
 
-### Installing
+## Output
 
-Create a new section in the Galaxy tool_conf.xml from the config file:
+* **-output_sink**: (string) Path to the output csv file
 
-```
-<section id="retro" name="Retro Nodes">
-  <tool file="/local/path/wrap_rpCofactors.xml" />
-</section>
-```
+## Installing
 
-Make sure that docker can be run as root. It's important to run the docker as root user since it will be calling a script that writes files to a temporary folder inside the docker before sending back to Galaxy:
+To compile the docker use the following command:
 
 ```
-sudo groupadd docker
-sudo gpasswd -a $USER docker
-sudo service docker restart
+docker build -t brsynth/rpextractsink-rest:dev .
 ```
 
-Build the docker image:
+### Running the test
+
+To run the test, run the following command:
 
 ```
-docker build -t brsynth/rpextractsink-standalone:dev .
+python run.py
 ```
 
-Make sure that the following entry exists under Galaxy's destination tag in job_conf.xml:
+## Dependencies
 
-```
-    <destination id="docker_local" runner="local">
-      <param id="docker_enabled">true</param>
-      <param id="docker_sudo">false</param>
-      <param id="docker_auto_rm">true</param>
-      <param id="docker_set_user">root</param>
-    </destination>
-```
-
-And that the destination of the tool is refered under the tools tag of job_conf.xml:
-
-```
-    <tool id="rpCofactors" destination="docker_local" />
-```
-
-Finally, make sure that you give the python scripts execution permission:
-
-```
-chmod 755 *.py
-```
-
-## Running the tests
-
-TODO
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Galaxy](https://galaxyproject.org) - The Galaxy project
+* Base docker image: [brsynth/rpbase](https://hub.docker.com/r/brsynth/rpbase)
+* Cache docker image: [brsynth/rpcache](https://hub.docker.com/r/brsynth/rpcache)
 
 ## Contributing
 
@@ -84,17 +44,19 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-TODO
+v0.1
 
 ## Authors
 
 * **Melchior du Lac** 
+* Thomas Duigou
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+[MIT](https://github.com/Galaxy-SynBioCAD/rpExtractSink/blob/master/LICENSE)
 
 ## Acknowledgments
 
-* Thomas Duigou
 * Joan Hérisson
+
+### How to cite rpMakeSource?

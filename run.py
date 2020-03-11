@@ -17,7 +17,7 @@ import docker
 ##
 #
 #
-def main(input_sbml, output_sink, compartment_id):
+def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
     docker_client = docker.from_env()
     image_str = 'brsynth/rpextractsink-standalone:dev'
     try:
@@ -38,13 +38,19 @@ def main(input_sbml, output_sink, compartment_id):
                    '-output_sink',
                    '/home/tmp_output/output.dat',
                    '-compartment_id',
-                   compartment_id]
-        docker_client.containers.run(image_str, 
-                command, 
-                auto_remove=True, 
-                detach=False, 
-                volumes={tmpOutputFolder+'/': {'bind': '/home/tmp_output', 'mode': 'rw'}})
+                   str(compartment_id),
+                   '-remove_dead_end',
+                   str(remove_dead_end)]
+        docker_client.containers.run(image_str,
+                                     command,
+                                     detach=True,
+                                     stderr=True,
+                                     volumes={tmpOutputFolder+'/': {'bind': '/home/tmp_output', 'mode': 'rw'}})
+        container.wait()
+        err = container.logs(stdout=False, stderr=True)
+        print(err)
         shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
+        container.remove()
 
 
 ##
@@ -55,5 +61,6 @@ if __name__ == "__main__":
     parser.add_argument('-input_sbml', type=str)
     parser.add_argument('-output_sink', type=str)
     parser.add_argument('-compartment_id', type=str, default='MNXC3')
+    parser.add_argument('-remove_dead_end', type=bool, default=True)
     params = parser.parse_args()
     main(params.input_sbml, params.output_sink, params.compartment_id)
