@@ -1,6 +1,7 @@
+OLD/
 input_cache
 cache
 __pycache__
-test/test_output.csv
+test/
 rpCache.py
 rpSBML.py
