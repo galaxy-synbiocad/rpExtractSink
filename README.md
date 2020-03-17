@@ -41,7 +41,7 @@ python tool_rpExtractSink.py -input test/e_coli_model.sbml -output test/test_rpE
 
 ## Dependencies
 
-* Base docker image: [brsynth/rprest](https://hub.docker.com/r/brsynth/rprest)
+* Base docker image: [brsynth/rpcache-rest](https://hub.docker.com/r/brsynth/rpcache-rest)
 
 ## Contributing
 
