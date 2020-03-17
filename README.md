@@ -1,6 +1,6 @@
 # rpExtractSink
 
-* Docker image: [brsynth/rpextractsink-standalone](https://hub.docker.com/r/brsynth/rpextractsink-standalone)
+* Docker image: [brsynth/rpextractsink-rest](https://hub.docker.com/r/brsynth/rpextractsink-rest)
 
 Tool that takes for input an SBML file and uses the MIRIAM annotations of the chemical species within a given compartment to find their InChI structures. Performs FVA to remove dead end metabolites. The output is a CSV RetroPath2.0 friendly CSV file that can be used as sink input. 
 
@@ -22,13 +22,13 @@ Addtional information:
 To compile the docker use the following command:
 
 ```
-docker build -t brsynth/rpextractsink-rest:dev .
+docker build -t brsynth/rpextractsink-rest .
 ```
 
 To run the service as localhost, use the following command:
 
 ```
-docker run -p 8888:8888 brsynth/rpextractsink-rest:dev
+docker run -p 8888:8888 brsynth/rpextractsink-rest
 ```
 
 ### Running the test
