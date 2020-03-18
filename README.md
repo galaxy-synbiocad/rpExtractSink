@@ -17,6 +17,11 @@ Addtional information:
 
 * **-output_sink**: (string) Path to the output csv file
 
+## Dependencies
+
+* Base docker image: [brsynth/rpbase](https://hub.docker.com/r/brsynth/rpbase)
+* Cache docker image: [brsynth/rpcache](https://hub.docker.com/r/brsynth/rpcache)
+
 ## Installing
 
 To compile the docker use the following command:
@@ -32,11 +37,6 @@ To run the test, run the following command:
 ```
 python run.py -input_sbml test/e_coli_model.sbml -output_sink test/test_rpExtractSink.csv
 ```
-
-## Dependencies
-
-* Base docker image: [brsynth/rpbase](https://hub.docker.com/r/brsynth/rpbase)
-* Cache docker image: [brsynth/rpcache](https://hub.docker.com/r/brsynth/rpcache)
 
 ## Contributing
 
