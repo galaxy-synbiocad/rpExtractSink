@@ -101,36 +101,36 @@ class rpExtractSink:
     # NOTE: this only works for MNX models, since we are parsing the id
     # TODO: change this to read the annotations and extract the MNX id's
     #
-    def genSink(self, input_sbml, remove_dead_end=False, compartment_id='MNXC3'):
-        sbml_data = input_sbml.read().decode("utf-8")
-        self.rpsbml = rpSBML.rpSBML('inputModel', libsbml.readSBMLFromString(sbml_data))
+    def genSink(self, input_sbml, output_sink, remove_dead_end=False, compartment_id='MNXC3'):
+        self.rpsbml = rpSBML.rpSBML('tmp')
+        self.rpsbml.readSBML(input_sbml)
         if remove_dead_end:
-            self._removeDeadEnd()
-        file_out = io.StringIO()
+            self.logger.warning('------REMOVING DEAD ENDS------')
+            print('------REMOVING DEAD ENDS------')
+            try:
+                self._removeDeadEnd()
+            except Exception as e:
+                self.logger.warning('BUG: error reading some SBML by CobraPy')
+                self.rpsbml = rpSBML.rpSBML('tmp')
+                self.rpsbml.readSBML(input_sbml)
         ### open the cache ###
         cytoplasm_species = []
         for i in self.rpsbml.model.getListOfSpecies():
             if i.getCompartment()==compartment_id:
                 cytoplasm_species.append(i)
-        count = 0
-        writer = csv.writer(file_out, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
-        writer.writerow(['Name','InChI'])
-        for i in cytoplasm_species:
-            res = self.rpsbml.readMIRIAMAnnotation(i.getAnnotation())
-            #extract the MNX id's
-            try:
-                mnx = res['metanetx'][0]
-            except KeyError:
-                continue
-            try:
-                inchi = self.mnxm_strc[mnx]['inchi']
-            except KeyError:
-                inchi = None
-            if mnx and inchi:
-                writer.writerow([mnx,inchi])
-                count += 1
-        file_out.seek(0)
-        if count==0:
-            return ''
-        else:
-            return file_out
+        with open(output_sink, 'w') as outS:
+            writer = csv.writer(outS, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+            writer.writerow(['Name','InChI'])
+            for i in cytoplasm_species:
+                res = self.rpsbml.readMIRIAMAnnotation(i.getAnnotation())
+                #extract the MNX id's
+                try:
+                    mnx = res['metanetx'][0]
+                except KeyError:
+                    continue
+                try:
+                    inchi = self.mnxm_strc[mnx]['inchi']
+                except KeyError:
+                    inchi = None
+                if mnx and inchi:
+                    writer.writerow([mnx,inchi])
