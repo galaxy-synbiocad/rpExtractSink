@@ -50,13 +50,10 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
         container.wait()
         err = container.logs(stdout=False, stderr=True)
         err_str = err.decode('utf-8')
-        print(err_str)
-        shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
-        '''
         if 'ERROR' in err_str:
+            print(err_str)
         else:
             shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
-        '''
         container.remove()
 
 
@@ -74,4 +71,6 @@ if __name__ == "__main__":
         remove_dead_end = True 
     elif params.remove_dead_end==False or params.remove_dead_end=='False' or params.remove_dead_end=='false' or params.remove_dead_end=='f':
         remove_dead_end = False
+    else:
+        logging.error('Cannot interpret input -remove_dead_end: '+str(params.remove_dead_end))
     main(params.input_sbml, params.output_sink, params.compartment_id, remove_dead_end)
