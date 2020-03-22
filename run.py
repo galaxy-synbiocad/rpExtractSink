@@ -31,25 +31,29 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
             logging.error('Cannot pull image: '+str(image_str))
             exit(1)
     with tempfile.TemporaryDirectory() as tmpOutputFolder:
-        shutil.copy(input_sbml, tmpOutputFolder+'/input_sbml.sbml')
-        command = ['/home/tool_rpExtractSink.py',
+        shutil.copy(input_sbml, tmpOutputFolder+'/input.sbml')
+        command = ['python',
+                   '/home/tool_rpExtractSink.py',
                    '-input_sbml',
-                   '/home/tmp_output/input_sbml.sbml',
+                   '/home/tmp_output/input.sbml',
                    '-output_sink',
                    '/home/tmp_output/output.dat',
                    '-compartment_id',
                    str(compartment_id),
                    '-remove_dead_end',
                    str(remove_dead_end)]
-        docker_client.containers.run(image_str,
-                                     command,
-                                     detach=True,
-                                     stderr=True,
-                                     volumes={tmpOutputFolder+'/': {'bind': '/home/tmp_output', 'mode': 'rw'}})
+        container = docker_client.containers.run(image_str,
+                                                 command,
+                                                 detach=True,
+                                                 stderr=True,
+                                                 volumes={tmpOutputFolder+'/': {'bind': '/home/tmp_output', 'mode': 'rw'}})
         container.wait()
         err = container.logs(stdout=False, stderr=True)
-        print(err)
-        shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
+        err_str = err.decode('utf-8')
+        if 'ERROR' in err_str:
+            print(err_str)
+        else:
+            shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
         container.remove()
 
 
@@ -61,6 +65,12 @@ if __name__ == "__main__":
     parser.add_argument('-input_sbml', type=str)
     parser.add_argument('-output_sink', type=str)
     parser.add_argument('-compartment_id', type=str, default='MNXC3')
-    parser.add_argument('-remove_dead_end', type=bool, default=True)
+    parser.add_argument('-remove_dead_end', type=str, default='True')
     params = parser.parse_args()
-    main(params.input_sbml, params.output_sink, params.compartment_id)
+    if params.remove_dead_end==True or params.remove_dead_end=='True' or params.remove_dead_end=='true' or params.remove_dead_end=='t':
+        remove_dead_end = True 
+    elif params.remove_dead_end==False or params.remove_dead_end=='False' or params.remove_dead_end=='false' or params.remove_dead_end=='f':
+        remove_dead_end = False
+    else:
+        logging.error('Cannot interpret input -remove_dead_end: '+str(params.remove_dead_end))
+    main(params.input_sbml, params.output_sink, params.compartment_id, remove_dead_end)
