@@ -13,123 +13,6 @@ import tempfile
 
 import rpSBML
 
-
-###################################################################################
-###################################################################################
-###################################################################################
-
-import signal
-import inspect
-import traceback
-from functools import wraps
-from multiprocessing import Process, Queue
-
-'''
-This is to deal with an error caused by Cobrapy segmentation fault
-'''
-def handler(signum, frame):
-    raise OSError('CobraPy is throwing a segmentation fault')
-
-class Sentinel:
-    pass
-
-def processify(func):
-    '''Decorator to run a function as a process.
-    Be sure that every argument and the return value
-    is *pickable*.
-    The created process is joined, so the code does not
-    run in parallel.
-    '''
-
-    def process_generator_func(q, *args, **kwargs):
-        result = None
-        error = None
-        it = iter(func())
-        while error is None and result != Sentinel:
-            try:
-                result = next(it)
-                error = None
-            except StopIteration:
-                result = Sentinel
-                error = None
-            except Exception:
-                ex_type, ex_value, tb = sys.exc_info()
-                error = ex_type, ex_value, ''.join(traceback.format_tb(tb))
-                result = None
-            q.put((result, error))
-
-    def process_func(q, *args, **kwargs):
-        try:
-            result = func(*args, **kwargs)
-        except Exception:
-            ex_type, ex_value, tb = sys.exc_info()
-            error = ex_type, ex_value, ''.join(traceback.format_tb(tb))
-            result = None
-        else:
-            error = None
-
-        q.put((result, error))
-
-    def wrap_func(*args, **kwargs):
-        # register original function with different name
-        # in sys.modules so it is pickable
-        process_func.__name__ = func.__name__ + 'processify_func'
-        setattr(sys.modules[__name__], process_func.__name__, process_func)
-
-        signal.signal(signal.SIGCHLD, handler) #This is to catch the segmentation error 
-
-        q = Queue()
-        p = Process(target=process_func, args=[q] + list(args), kwargs=kwargs)
-        p.start()
-        result, error = q.get()
-        p.join()
-
-        if error:
-            ex_type, ex_value, tb_str = error
-            message = '%s (in subprocess)\n%s' % (str(ex_value), tb_str)
-            raise ex_type(message)
-
-        return result
-
-    def wrap_generator_func(*args, **kwargs):
-        # register original function with different name
-        # in sys.modules so it is pickable
-        process_generator_func.__name__ = func.__name__ + 'processify_generator_func'
-        setattr(sys.modules[__name__], process_generator_func.__name__, process_generator_func)
-
-        signal.signal(signal.SIGCHLD, handler) #This is to catch the segmentation error
-
-        q = Queue()
-        p = Process(target=process_generator_func, args=[q] + list(args), kwargs=kwargs)
-        p.start()
-
-        result = None
-        error = None
-        while error is None:
-            result, error = q.get()
-            if result == Sentinel:
-                break
-            yield result
-        p.join()
-
-        if error:
-            ex_type, ex_value, tb_str = error
-            message = '%s (in subprocess)\n%s' % (str(ex_value), tb_str)
-            raise ex_type(message)
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if inspect.isgeneratorfunction(func):
-            return wrap_generator_func(*args, **kwargs)
-        else:
-            return wrap_func(*args, **kwargs)
-    return wrapper
-
-
-
-
-
-
 ## Class to read all the input files
 #
 # Contains all the functions that read the cache files and input files to reconstruct the heterologous pathways
@@ -155,8 +38,9 @@ class rpExtractSink:
     #
     def _convertToCobra(self):
         try:
-            self.cobraModel = cobra.io.read_sbml_model(self.rpsbml.document.toXMLNode().toXMLString(),
-                    use_fbc_package=True)
+            with tempfile.TemporaryDirectory() as tmpOutputFolder:
+                self.rpsbml.writeSBML(tmpOutputFolder)
+                self.cobraModel = cobra.io.read_sbml_model(glob.glob(tmpOutputFolder+'/*')[0], use_fbc_package=True)
             #use CPLEX
             # self.cobraModel.solver = 'cplex'
         except cobra.io.sbml.CobraSBMLError as e:
@@ -188,13 +72,12 @@ class rpExtractSink:
     ##
     #
     #
-    @processify
-    def _removeDeadEnd(self):
-        self._convertToCobra()
+    def _removeDeadEnd(self, sbml_path):
+        self.cobraModel = cobra.io.read_sbml_model(sbml_path, use_fbc_package=True)
         self._reduce_model()
         with tempfile.TemporaryDirectory() as tmpOutputFolder:
             cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml')
-            self.rpsbml = rpSBML.rpSBML('inputModel')
+            self.rpsbml = rpSBML.rpSBML('tmp')
             self.rpsbml.readSBML(tmpOutputFolder+'/tmp.xml')
 
 
@@ -209,11 +92,11 @@ class rpExtractSink:
     # TODO: change this to read the annotations and extract the MNX id's
     #
     def genSink(self, input_sbml, output_sink, remove_dead_end=False, compartment_id='MNXC3'):
-        self.rpsbml = rpSBML.rpSBML('tmp')
-        self.rpsbml.readSBML(input_sbml)
         if remove_dead_end:
-            '''
-            self._removeDeadEnd()
+            self._removeDeadEnd(input_sbml)
+        else:
+            self.rpsbml = rpSBML.rpSBML('tmp')
+            self.rpsbml.readSBML(input_sbml)
             '''
             try:
                 self._removeDeadEnd()
@@ -222,6 +105,7 @@ class rpExtractSink:
                 logging.warning('Could not use FVA on this model')
                 self.rpsbml = rpSBML.rpSBML('tmp')
                 self.rpsbml.readSBML(input_sbml)
+            '''
         ### open the cache ###
         cytoplasm_species = []
         for i in self.rpsbml.model.getListOfSpecies():
@@ -236,10 +120,11 @@ class rpExtractSink:
                 try:
                     mnx = res['metanetx'][0]
                 except KeyError:
+                    logging.warning('Cannot find MetaNetX ID for '+str(i.getId()))
                     continue
                 try:
                     inchi = self.mnxm_strc[mnx]['inchi']
                 except KeyError:
                     inchi = None
-                if mnx and inchi:
+                if inchi:
                     writer.writerow([mnx,inchi])

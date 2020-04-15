@@ -1,4 +1,8 @@
 import sys
+import logging
+
+logging.disable(logging.INFO)
+logging.disable(logging.WARNING)
 
 import rpTool
 import rpCache
