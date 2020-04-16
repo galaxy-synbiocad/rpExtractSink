@@ -111,6 +111,9 @@ class rpExtractSink:
         for i in self.rpsbml.model.getListOfSpecies():
             if i.getCompartment()==compartment_id:
                 cytoplasm_species.append(i)
+        if not cytoplasm_species:
+            logging.error('Could not retreive any species in the compartment: '+str(compartment_id))
+            logging.error('Is the right compartment set?')
         with open(output_sink, 'w') as outS:
             writer = csv.writer(outS, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(['Name','InChI'])
