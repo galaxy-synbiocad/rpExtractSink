@@ -42,9 +42,9 @@ python run.py -input_sbml test/e_coli_model.sbml -output_sink test/test_rpExtrac
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Versioning
+## Version
 
-v0.1
+0.1
 
 ## Authors
 
