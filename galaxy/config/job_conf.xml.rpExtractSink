@@ -1,0 +1,1 @@
+    <tool id="rpExtractSink" destination="docker_local" />

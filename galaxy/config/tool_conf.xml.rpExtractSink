@@ -1,0 +1,3 @@
+  <section id="sbc" name="SynBioCAD">
+    <tool file="rpExtractSink/code/wrap_rpExtractSink.xml" />
+  </section>

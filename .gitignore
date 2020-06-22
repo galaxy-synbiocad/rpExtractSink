@@ -3,5 +3,6 @@ cache/
 input_cache/
 test/
 OLD/
+*.swp
 rpCache.py
 rpSBML.py
