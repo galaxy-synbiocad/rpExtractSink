@@ -1,4 +1,4 @@
-FROM brsynth/rpcache:dev
+FROM brsynth/rpcache
 
 RUN pip install --no-cache-dir cobra
 
