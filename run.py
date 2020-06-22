@@ -46,6 +46,7 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
                                                  command,
                                                  detach=True,
                                                  stderr=True,
+                                                 remove=True,
                                                  volumes={tmpOutputFolder+'/': {'bind': '/home/tmp_output', 'mode': 'rw'}})
         container.wait()
         err = container.logs(stdout=False, stderr=True)

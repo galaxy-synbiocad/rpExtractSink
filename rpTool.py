@@ -23,7 +23,7 @@ class rpExtractSink:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.logger.info('Starting instance of rpExtractSink')
-        self.mnxm_strc = None #There are the structures from MNXM
+        self.cid_strc = None #There are the structures from MNXM
         self.rpsbml = None
         self.cobraModel = None
 
@@ -126,7 +126,7 @@ class rpExtractSink:
                     logging.warning('Cannot find MetaNetX ID for '+str(i.getId()))
                     continue
                 try:
-                    inchi = self.mnxm_strc[mnx]['inchi']
+                    inchi = self.cid_strc[mnx]['inchi']
                 except KeyError:
                     inchi = None
                 if inchi:
