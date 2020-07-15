@@ -19,7 +19,7 @@ import docker
 #
 def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
     docker_client = docker.from_env()
-    image_str = 'brsynth/rpextractsink-standalone:dev'
+    image_str = 'brsynth/rpextractsink-standalone'
     try:
         image = docker_client.images.get(image_str)
     except docker.errors.ImageNotFound:
@@ -50,6 +50,7 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
         container.wait()
         err = container.logs(stdout=False, stderr=True)
         err_str = err.decode('utf-8')
+        print(err_str)
         if 'ERROR' in err_str:
             print(err_str)
         else:

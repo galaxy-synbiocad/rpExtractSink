@@ -3,7 +3,9 @@ import logging
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
-    level=logging.DEBUG,
+    #level=logging.DEBUG,
+    #level=logging.WARNING,
+    level=logging.ERROR,
     datefmt='%Y-%m-%d %H:%M:%S')
 
 import rpTool
