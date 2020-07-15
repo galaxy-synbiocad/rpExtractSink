@@ -114,6 +114,7 @@ class rpExtractSink:
         if not cytoplasm_species:
             logging.error('Could not retreive any species in the compartment: '+str(compartment_id))
             logging.error('Is the right compartment set?')
+            return False
         with open(output_sink, 'w') as outS:
             writer = csv.writer(outS, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(['Name','InChI'])
