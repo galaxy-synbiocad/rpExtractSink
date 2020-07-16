@@ -17,7 +17,7 @@ import docker
 ##
 #
 #
-def main(input, output, compartment_id='MNXC3', remove_dead_end=True):
+def main(input_sbml, output, compartment_id='MNXC3', remove_dead_end=True):
     docker_client = docker.from_env()
     image_str = 'brsynth/rpextractsink-standalone'
     try:
@@ -31,7 +31,7 @@ def main(input, output, compartment_id='MNXC3', remove_dead_end=True):
             logging.error('Cannot pull image: '+str(image_str))
             exit(1)
     with tempfile.TemporaryDirectory() as tmpOutputFolder:
-        shutil.copy(input, tmpOutputFolder+'/input.sbml')
+        shutil.copy(input_sbml, tmpOutputFolder+'/input.sbml')
         command = ['python',
                    '/home/tool_rpExtractSink.py',
                    '-input',
@@ -50,7 +50,6 @@ def main(input, output, compartment_id='MNXC3', remove_dead_end=True):
         container.wait()
         err = container.logs(stdout=False, stderr=True)
         err_str = err.decode('utf-8')
-        print(err_str)
         if 'ERROR' in err_str:
             print(err_str)
         else:
