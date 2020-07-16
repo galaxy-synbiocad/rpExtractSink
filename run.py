@@ -17,7 +17,7 @@ import docker
 ##
 #
 #
-def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
+def main(input, output, compartment_id='MNXC3', remove_dead_end=True):
     docker_client = docker.from_env()
     image_str = 'brsynth/rpextractsink-standalone'
     try:
@@ -31,12 +31,12 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
             logging.error('Cannot pull image: '+str(image_str))
             exit(1)
     with tempfile.TemporaryDirectory() as tmpOutputFolder:
-        shutil.copy(input_sbml, tmpOutputFolder+'/input.sbml')
+        shutil.copy(input, tmpOutputFolder+'/input.sbml')
         command = ['python',
                    '/home/tool_rpExtractSink.py',
-                   '-input_sbml',
+                   '-input',
                    '/home/tmp_output/input.sbml',
-                   '-output_sink',
+                   '-output',
                    '/home/tmp_output/output.dat',
                    '-compartment_id',
                    str(compartment_id),
@@ -54,7 +54,7 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
         if 'ERROR' in err_str:
             print(err_str)
         else:
-            shutil.copy(tmpOutputFolder+'/output.dat', output_sink)
+            shutil.copy(tmpOutputFolder+'/output.dat', output)
         container.remove()
 
 
@@ -63,8 +63,8 @@ def main(input_sbml, output_sink, compartment_id='MNXC3', remove_dead_end=True):
 #
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('Generate the sink from a model SBML by specifying the compartment')
-    parser.add_argument('-input_sbml', type=str)
-    parser.add_argument('-output_sink', type=str)
+    parser.add_argument('-input', type=str)
+    parser.add_argument('-output', type=str)
     parser.add_argument('-compartment_id', type=str, default='MNXC3')
     parser.add_argument('-remove_dead_end', type=str, default='True')
     params = parser.parse_args()
@@ -74,4 +74,4 @@ if __name__ == "__main__":
         remove_dead_end = False
     else:
         logging.error('Cannot interpret input -remove_dead_end: '+str(params.remove_dead_end))
-    main(params.input_sbml, params.output_sink, params.compartment_id, remove_dead_end)
+    main(params.input, params.output, params.compartment_id, remove_dead_end)
