@@ -1,7 +1,7 @@
 <tool id="rpExtractSink" name="Sink from SBML" version="0.1">
   <description>Generate the RetroPath2.0 sink file from an SBML input</description>
   <requirements>
-		<container type="docker">brsynth/rpextractsink-standalone</container>
+		<container type="docker">brsynth/rpextractsink-standalone:dev</container>
   </requirements>
   <command detect_errors="exit_code"><![CDATA[
 	'$__tool_directory__/tool_rpExtractSink.py' -input '$input' -output '$output' -remove_dead_end '$remove_dead_end' -compartment_id '$adv.compartment_id'
