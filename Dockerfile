@@ -1,7 +1,7 @@
-FROM brsynth/rpcache
+FROM brsynth/rpcache:v1
 
-RUN pip install --no-cache-dir cobra==0.16
-#RUN pip install --no-cache-dir cobra
+#RUN pip install --no-cache-dir cobra==0.16
+RUN pip install --no-cache-dir cobra
 
 COPY rpTool.py /home/
 COPY rpToolServe.py /home/

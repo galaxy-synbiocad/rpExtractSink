@@ -27,7 +27,7 @@ Addtional information:
 To compile the docker use the following command:
 
 ```
-docker build -t brsynth/rpextractsink-standalone .
+docker build -t brsynth/rpextractsink-standalone:v1 .
 ```
 
 ### Running the test
