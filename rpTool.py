@@ -11,6 +11,11 @@ import libsbml
 import cobra
 import tempfile
 
+#because cobrapy is terrible
+import time
+import timeout_decorator
+TIMEOUT = 5
+
 import rpSBML
 
 ## Class to read all the input files
@@ -60,7 +65,7 @@ class rpExtractSink:
         :return: reduced cobra model object
         """
         lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(self.cobraModel, open_exchanges=True)
-        # For assert and logging: Backup the list of metabolites and reactions
+        # For assert and self.logger: Backup the list of metabolites and reactions
         nb_metabolite_model_ids = set([m.id for m in self.cobraModel.metabolites])
         nb_reaction_model_ids = set([m.id for m in self.cobraModel.reactions])
         # Remove unwanted reactions and metabolites
@@ -72,6 +77,7 @@ class rpExtractSink:
     ##
     #
     #
+    @timeout_decorator.timeout(TIMEOUT*60.0)
     def _removeDeadEnd(self, sbml_path):
         self.cobraModel = cobra.io.read_sbml_model(sbml_path, use_fbc_package=True)
         self._reduce_model()
@@ -92,28 +98,25 @@ class rpExtractSink:
     # TODO: change this to read the annotations and extract the MNX id's
     #
     def genSink(self, input_sbml, output_sink, remove_dead_end=False, compartment_id='MNXC3'):
+        ### because cobrapy can be terrible and cause infinite loop depending on the input SBML model
         if remove_dead_end:
-            self._removeDeadEnd(input_sbml)
+            try:
+                self._removeDeadEnd(input_sbml)
+            except timeout_decorator.timeout_decorator.TimeoutError:
+                self.logger.warning('removeDeadEnd reached its timeout... parsing the whole model')
+                self.rpsbml = rpSBML.rpSBML('tmp')
+                self.rpsbml.readSBML(input_sbml)
         else:
             self.rpsbml = rpSBML.rpSBML('tmp')
             self.rpsbml.readSBML(input_sbml)
-            '''
-            try:
-                self._removeDeadEnd()
-            except OSError as e:
-                logging.warning(e)
-                logging.warning('Could not use FVA on this model')
-                self.rpsbml = rpSBML.rpSBML('tmp')
-                self.rpsbml.readSBML(input_sbml)
-            '''
         ### open the cache ###
         cytoplasm_species = []
         for i in self.rpsbml.model.getListOfSpecies():
             if i.getCompartment()==compartment_id:
                 cytoplasm_species.append(i)
         if not cytoplasm_species:
-            logging.error('Could not retreive any species in the compartment: '+str(compartment_id))
-            logging.error('Is the right compartment set?')
+            self.logger.error('Could not retreive any species in the compartment: '+str(compartment_id))
+            self.logger.error('Is the right compartment set?')
             return False
         with open(output_sink, 'w') as outS:
             writer = csv.writer(outS, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
@@ -124,7 +127,7 @@ class rpExtractSink:
                 try:
                     mnx = res['metanetx'][0]
                 except KeyError:
-                    logging.warning('Cannot find MetaNetX ID for '+str(i.getId()))
+                    self.logger.warning('Cannot find MetaNetX ID for '+str(i.getId()))
                     continue
                 try:
                     inchi = self.cid_strc[mnx]['inchi']
