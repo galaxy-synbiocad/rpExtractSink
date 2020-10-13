@@ -118,6 +118,7 @@ class rpExtractSink:
             self.logger.error('Could not retreive any species in the compartment: '+str(compartment_id))
             self.logger.error('Is the right compartment set?')
             return False
+        at_least_one_added = False
         with open(output_sink, 'w') as outS:
             writer = csv.writer(outS, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
             writer.writerow(['Name','InChI'])
@@ -134,4 +135,8 @@ class rpExtractSink:
                 except KeyError:
                     inchi = None
                 if inchi:
+                    at_least_one_added = True
                     writer.writerow([mnx,inchi])
+        if not at_least_one_added:
+            self.logger.error('Cannot extract a single inchi from the SBML at the given compartment')
+            return False
