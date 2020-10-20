@@ -18,14 +18,12 @@ TIMEOUT = 5
 
 import rpSBML
 
-## Class to read all the input files
-#
-# Contains all the functions that read the cache files and input files to reconstruct the heterologous pathways
 class rpExtractSink:
-    ## InputReader constructor
-    #
-    #  @param self The object pointer
+    """Class to extract all the sink
+    """
     def __init__(self):
+        """Constructor for the rpExtractSink class
+        """
         self.logger = logging.getLogger(__name__)
         self.logger.info('Starting instance of rpExtractSink')
         self.cid_strc = None #There are the structures from MNXM
@@ -38,10 +36,12 @@ class rpExtractSink:
     #######################################################################
 
 
-    ## Pass the libSBML file to Cobra
-    #
-    #
     def _convertToCobra(self):
+        """Pass the libSBML file to CobraPy
+
+        :rtype: None
+        :return: None
+        """
         try:
             with tempfile.TemporaryDirectory() as tmpOutputFolder:
                 self.rpsbml.writeSBML(tmpOutputFolder)
@@ -53,16 +53,11 @@ class rpExtractSink:
             self.logger.error('Cannot convert the libSBML model to Cobra')
 
 
-    ## Taken from Thomas Duigou's code
-    #
-    # @param input Cobra model object
-    #
     def _reduce_model(self):
-        """
-        Reduce the model by removing reaction that cannot carry any flux and orphan metabolites
+        """Reduce the model by removing reaction that cannot carry any flux and orphan metabolites
 
-        :param model: cobra model object
-        :return: reduced cobra model object
+        :rtype: None
+        :return: None
         """
         lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(self.cobraModel, open_exchanges=True)
         # For assert and self.logger: Backup the list of metabolites and reactions
@@ -74,11 +69,17 @@ class rpExtractSink:
         assert len(set([m.id for m in self.cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
 
 
-    ##
-    #
-    #
     @timeout_decorator.timeout(TIMEOUT*60.0)
     def _removeDeadEnd(self, sbml_path):
+        """Remove dead end metabolites by running FVA
+
+        :param sbml_path: The path to the SBML file
+
+        :param sbml_path: str
+
+        :rtype: None
+        :return: None
+        """
         self.cobraModel = cobra.io.read_sbml_model(sbml_path, use_fbc_package=True)
         self._reduce_model()
         with tempfile.TemporaryDirectory() as tmpOutputFolder:
@@ -92,12 +93,24 @@ class rpExtractSink:
     #######################################################################
 
 
-    ## Generate the sink from a given model and the
-    #
     # NOTE: this only works for MNX models, since we are parsing the id
     # TODO: change this to read the annotations and extract the MNX id's
-    #
     def genSink(self, input_sbml, output_sink, remove_dead_end=False, compartment_id='MNXC3'):
+        """Generate the sink from an SBML model
+
+        :param input_sbml: The path to the SBML file
+        :param output_sink: The path to the output sink file
+        :param remove_dead_end: Remove the dead end species
+        :param compartment_id: The id of the SBML compartment to extract the sink from
+
+        :param input_sbml: str
+        :param output_sink: str
+        :param remove_dead_end: bool
+        :param compartment_id: str
+
+        :rtype: bool
+        :return: Sucess or failure of the function
+        """
         ### because cobrapy can be terrible and cause infinite loop depending on the input SBML model
         if remove_dead_end:
             try:

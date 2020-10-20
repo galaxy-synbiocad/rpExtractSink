@@ -8,9 +8,6 @@ sys.path.insert(0, '/home/')
 import rpToolServe
 
 
-##
-#
-#
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('Generate the sink from a model SBML by specifying the compartment')
     parser.add_argument('-input', type=str)
