@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rpExtractSink’s Documentation &#8212; rpExtractSink v0.2 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="rpextractsink-s-documentation">
+<h1>rpExtractSink’s Documentation<a class="headerlink" href="#rpextractsink-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Welcome to the documentation for rpExtractSink. This project generates an sink file that is <a class="reference external" href="https://github.com/Galaxy-SynBioCAD/RetroPath2">RetroPath2.0</a> friendly.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>First build the <a class="reference external" href="https://github.com/Galaxy-SynBioCAD/rpBase">rpBase</a> and <a class="reference external" href="https://github.com/Galaxy-SynBioCAD/rpCache">rpCache</a> dockers before building the local docker:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker build -t brsynth/rpextractsink-standalone:v2 .
+</pre></div>
+</div>
+<p>To call the docker locally you can use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python run.py -input /path/to/file -output /path/to/file
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="py class">
+<dt id="rpToolServe.main">
+<em class="property">class </em><code class="sig-prename descclassname">rpToolServe.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_sbml</span></em>, <em class="sig-param"><span class="n">output_sink</span></em>, <em class="sig-param"><span class="n">remove_dead_end</span></em>, <em class="sig-param"><span class="n">compartment_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpToolServe.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the sink from an SBML model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_sbml</strong> – The path to the SBML file</p></li>
+<li><p><strong>output_sink</strong> – The path to the output sink file</p></li>
+<li><p><strong>remove_dead_end</strong> – Remove the dead end species</p></li>
+<li><p><strong>compartment_id</strong> – The id of the SBML compartment to extract the sink from</p></li>
+<li><p><strong>input_sbml</strong> – str</p></li>
+<li><p><strong>output_sink</strong> – str</p></li>
+<li><p><strong>remove_dead_end</strong> – bool</p></li>
+<li><p><strong>compartment_id</strong> – str</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="rpTool.rpExtractSink">
+<em class="property">class </em><code class="sig-prename descclassname">rpTool.</code><code class="sig-name descname">rpExtractSink</code><a class="headerlink" href="#rpTool.rpExtractSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to extract all the sink</p>
+<dl class="py method">
+<dt id="rpTool.rpExtractSink.genSink">
+<code class="sig-name descname">genSink</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_sbml</span></em>, <em class="sig-param"><span class="n">output_sink</span></em>, <em class="sig-param"><span class="n">remove_dead_end</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">compartment_id</span><span class="o">=</span><span class="default_value">'MNXC3'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rpTool.rpExtractSink.genSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the sink from an SBML model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_sbml</strong> – The path to the SBML file</p></li>
+<li><p><strong>output_sink</strong> – The path to the output sink file</p></li>
+<li><p><strong>remove_dead_end</strong> – Remove the dead end species</p></li>
+<li><p><strong>compartment_id</strong> – The id of the SBML compartment to extract the sink from</p></li>
+<li><p><strong>input_sbml</strong> – str</p></li>
+<li><p><strong>output_sink</strong> – str</p></li>
+<li><p><strong>remove_dead_end</strong> – bool</p></li>
+<li><p><strong>compartment_id</strong> – str</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Sucess or failure of the function</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="run.main">
+<em class="property">class </em><code class="sig-prename descclassname">run.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_sbml</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">compartment_id</span><span class="o">=</span><span class="default_value">'MNXC3'</span></em>, <em class="sig-param"><span class="n">remove_dead_end</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#run.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the sink from an SBML model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_sbml</strong> – The path to the SBML file</p></li>
+<li><p><strong>output</strong> – The path to the output sink file</p></li>
+<li><p><strong>compartment_id</strong> – The id of the SBML compartment to extract the sink from</p></li>
+<li><p><strong>remove_dead_end</strong> – Remove the dead end species</p></li>
+<li><p><strong>input_sbml</strong> – str</p></li>
+<li><p><strong>output</strong> – str</p></li>
+<li><p><strong>compartment_id</strong> – str</p></li>
+<li><p><strong>remove_dead_end</strong> – bool</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">rpExtractSink</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Melchior du Lac.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
