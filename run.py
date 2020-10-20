@@ -22,10 +22,10 @@ def main(input_sbml, output, compartment_id='MNXC3', remove_dead_end=True):
     :param compartment_id: The id of the SBML compartment to extract the sink from
     :param remove_dead_end: Remove the dead end species
 
-    :param input_sbml: str
-    :param output: str
-    :param compartment_id: str
-    :param remove_dead_end: bool
+    :type input_sbml: str
+    :type output: str
+    :type compartment_id: str
+    :type remove_dead_end: bool
 
     :rtype: None
     :return: None

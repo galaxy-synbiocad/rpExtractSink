@@ -75,7 +75,7 @@ class rpExtractSink:
 
         :param sbml_path: The path to the SBML file
 
-        :param sbml_path: str
+        :type sbml_path: str
 
         :rtype: None
         :return: None
@@ -103,10 +103,10 @@ class rpExtractSink:
         :param remove_dead_end: Remove the dead end species
         :param compartment_id: The id of the SBML compartment to extract the sink from
 
-        :param input_sbml: str
-        :param output_sink: str
-        :param remove_dead_end: bool
-        :param compartment_id: str
+        :type input_sbml: str
+        :type output_sink: str
+        :type remove_dead_end: bool
+        :type compartment_id: str
 
         :rtype: bool
         :return: Sucess or failure of the function
