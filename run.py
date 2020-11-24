@@ -31,7 +31,7 @@ def main(input_sbml, output, compartment_id='MNXC3', remove_dead_end=True):
     :return: None
     """
     docker_client = docker.from_env()
-    image_str = 'brsynth/rpextractsink-standalone:v2'
+    image_str = 'brsynth/rpextractsink-standalone'
     try:
         image = docker_client.images.get(image_str)
     except docker.errors.ImageNotFound:

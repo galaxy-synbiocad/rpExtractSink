@@ -1,4 +1,4 @@
-FROM brsynth/rpcache:v2
+FROM brsynth/rpcache
 
 RUN rm -rf /usr/local/lib/python3.7/site-packages/ruamel*
 RUN pip install --no-cache-dir cobra==0.16 timeout-decorator
