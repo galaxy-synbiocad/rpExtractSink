@@ -28,7 +28,7 @@ class rpExtractSink:
         self.logger.info('Starting instance of rpExtractSink')
         self.cid_strc = None #There are the structures from MNXM
         self.rpsbml = None
-        self.cobraModel = None
+        self.cobra_model = None
 
 
     #######################################################################
@@ -45,9 +45,9 @@ class rpExtractSink:
         try:
             with tempfile.TemporaryDirectory() as tmpOutputFolder:
                 self.rpsbml.writeSBML(tmpOutputFolder)
-                self.cobraModel = cobra.io.read_sbml_model(glob.glob(tmpOutputFolder+'/*')[0], use_fbc_package=True)
+                self.cobra_model = cobra.io.read_sbml_model(glob.glob(tmpOutputFolder+'/*')[0], use_fbc_package=True)
             #use CPLEX
-            # self.cobraModel.solver = 'cplex'
+            # self.cobra_model.solver = 'cplex'
         except cobra.io.sbml.CobraSBMLError as e:
             self.logger.error(e)
             self.logger.error('Cannot convert the libSBML model to Cobra')
@@ -59,14 +59,14 @@ class rpExtractSink:
         :rtype: None
         :return: None
         """
-        lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(self.cobraModel, open_exchanges=True)
+        lof_zero_flux_rxn = cobra.flux_analysis.find_blocked_reactions(self.cobra_model, open_exchanges=True)
         # For assert and self.logger: Backup the list of metabolites and reactions
-        nb_metabolite_model_ids = set([m.id for m in self.cobraModel.metabolites])
-        nb_reaction_model_ids = set([m.id for m in self.cobraModel.reactions])
+        nb_metabolite_model_ids = set([m.id for m in self.cobra_model.metabolites])
+        nb_reaction_model_ids = set([m.id for m in self.cobra_model.reactions])
         # Remove unwanted reactions and metabolites
-        self.cobraModel.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
+        self.cobra_model.remove_reactions(lof_zero_flux_rxn, remove_orphans=True)
         # Assert the number are expected numbers
-        assert len(set([m.id for m in self.cobraModel.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
+        assert len(set([m.id for m in self.cobra_model.reactions])) == len(nb_reaction_model_ids) - len(lof_zero_flux_rxn)
 
 
     @timeout_decorator.timeout(TIMEOUT*60.0)
@@ -80,10 +80,10 @@ class rpExtractSink:
         :rtype: None
         :return: None
         """
-        self.cobraModel = cobra.io.read_sbml_model(sbml_path, use_fbc_package=True)
+        self.cobra_model = cobra.io.read_sbml_model(sbml_path, use_fbc_package=True)
         self._reduce_model()
         with tempfile.TemporaryDirectory() as tmpOutputFolder:
-            cobra.io.write_sbml_model(self.cobraModel, tmpOutputFolder+'/tmp.xml')
+            cobra.io.write_sbml_model(self.cobra_model, tmpOutputFolder+'/tmp.xml')
             self.rpsbml = rpSBML.rpSBML('tmp')
             self.rpsbml.readSBML(tmpOutputFolder+'/tmp.xml')
 
@@ -145,7 +145,8 @@ class rpExtractSink:
                     continue
                 try:
                     inchi = self.cid_strc[mnx]['inchi']
-                except KeyError:
+                except (KeyError, TypeError):
+                    self.logger.warning('Either cache has not been passed or cannot detect the following mnx: '+str(mnx))
                     inchi = None
                 if inchi:
                     at_least_one_added = True

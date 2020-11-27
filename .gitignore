@@ -1,7 +1,6 @@
 __pycache__/
 cache/
 input_cache/
-test/
 OLD/
 *.swp
 rpCache.py
